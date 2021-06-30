@@ -18,13 +18,16 @@ int mode;
 long t_start; // 現在の状態になった時刻[ミリ秒]
 long t;      // 現在の状態になってからの経過時間[秒]
 
-
 //読み込み用の3Dモデル
 PShape red_flag, blue_flag;
+
+PFont font;
 
 void setup() {
   size(640, 480, P3D);
   colorMode(RGB, 100);
+  font = loadFont("Avenir-HeavyOblique-48.vlw");
+  textFont(font);
   println(MultiMarker.VERSION);
   //【注意】使用するカメラの解像度に合わせないとエラーになる
   String[] cameras = Capture.list(); //利用可能なカメラ一覧を取得
@@ -84,9 +87,10 @@ void gameInit() {
 
 int title() {
   gameInit();
-  textSize(30);
+  textSize(35);
   textAlign(CENTER);
-  text("AR旗振りゲーム", width * 0.5, height * 0.3);
+  text("FLAG WAVING GAME AR", width * 0.5, height * 0.3);
+  textSize(30);
   text("Press 'z' key to start", width * 0.5, height * 0.7);
   // 'z'でゲームスタート
   if(keyPressed && key == 'z') { 
@@ -99,7 +103,7 @@ int game() {
   //println("----------------");
   background(0);
   nya.drawBackground(cam);//frustumを考慮した背景描画
-  text(t + "game", width * 0.5, height * 0.5);
+  text(5 - (t % 5), width * 0.8, height * 0.15);
   
   //interbal時間ごとに判定(最初は含まない)
   if(t%(interval) == 0 && t != 0 && oneTimeCheck) {
@@ -143,12 +147,14 @@ int game() {
 }
 
 int ending() {
-  textSize(30);
+  textSize(40);
+  fill(100);
   textAlign(CENTER);
   text("GAME OVER", width * 0.5, height * 0.5);
-  text("Press 'z' to restart.", width * 0.5, height * 0.7);
-  // 'z'でリスタート
-  if(keyPressed && key == 'z') {
+  textSize(30);
+  text("Press 'r' to restart.", width * 0.5, height * 0.7);
+  // 'r'でリスタート
+  if(keyPressed && key == 'r') {
     return 0;
   }
   return 2;
@@ -193,15 +199,15 @@ void displayOrder(){
   textAlign(CENTER);
   fill(100);
   if(flagment==0){
-    textSize(50);
+    textSize(40);
     textAlign(CENTER);
-    fill(90,20,20);
-    text("Raise the red flag !!",width * 0.5,height * 0.2 );
+    fill(95,31,31);
+    text("Raise the red flag !!",width * 0.4,height * 0.15 );
   }
   else if(flagment==1){
-    textSize(50);
+    textSize(40);
     textAlign(CENTER);
-    fill(10,20,80);
-    text("Raise the blue flag !!",width * 0.5,height * 0.2 );
+    fill(30,60,95);
+    text("Raise the blue flag !!",width * 0.4,height * 0.15 );
   }
 }
