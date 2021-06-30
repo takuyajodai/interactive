@@ -1,6 +1,6 @@
 # Object Export From Tinkercad Server 2015
 
-mtllib obj.mtl
+mtllib obj_blue.mtl
 
 o obj_0
 v 11.634 		-10 		77.069
