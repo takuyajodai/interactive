@@ -9,6 +9,11 @@ MultiMarker nya;
 //ゲームモード 0:タイトル 1:ゲーム 2:終了
 int mode;
 
+//時間関係の変数
+long t_start; // 現在の状態になった時刻[ミリ秒]
+long t;      // 現在の状態になってからの経過時間[秒]
+
+
 //読み込み用の3Dモデル
 PShape red_flag, blue_flag;
 
@@ -44,6 +49,7 @@ void setup() {
 }
 
 void draw() {
+  t = (millis() - t_start) / 1000; // 経過時間を更新
   //カメラ存在チェック
   if (cam.available() !=true) {
     return;
@@ -61,6 +67,7 @@ void draw() {
   } else if(mode == 2) {
     nextMode = ending();
   }
+  if(mode != nextMode){ t_start = millis(); } // 状態が遷移するので、現在の状態になった時刻を更新する
   mode = nextMode;
 }
 
@@ -79,7 +86,11 @@ int title() {
 int game() {
   background(0);
   nya.drawBackground(cam);//frustumを考慮した背景描画
-  return 2;
+  text(t + "game", width * 0.5, height * 0.5);
+  if(check() == 1) {
+    return 2;
+  }
+  return 1;
 }
 
 int ending() {
@@ -92,4 +103,17 @@ int ending() {
     return 0;
   }
   return 2;
+}
+
+int check() {
+  // 0番目のマーカーが存在したら
+  if (nya.isExist(0)) {
+    return 1;
+  }
+  
+  // 1番目のマーカーが存在したら
+  if (nya.isExist(1)) {
+    return 1;
+  }
+  return 0;
 }
