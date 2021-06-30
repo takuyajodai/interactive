@@ -34,7 +34,7 @@ void setup() {
   //println("-------------------------------");
 
   //println("接続中のカメラ；[" + camNo + "] " + cameras[camNo]);
-  cam = new Capture(this, cameras[camNo]); //カメラに接続
+  cam = new Capture(this, "pipeline:autovideosrc"); //カメラに接続
 
   //複数マーカ管理用オブジェクト
   nya=new MultiMarker(this, width, height, "camera_para.dat", NyAR4PsgConfig.CONFIG_PSG);
@@ -95,7 +95,7 @@ int game() {
     flagment = designateFlags();
     println("flagment:"+flagment);  
   }
-  if(t%(interval+3)==0 && colorFlag == false)colorFlag = true;
+  if( t % ( interval+3 )==0 && colorFlag == false )colorFlag = true;
   displayOrder();
   if(check() == 1) {
     return 2;
@@ -142,15 +142,15 @@ void displayOrder(){
   textAlign(CENTER);
   fill(100);
   if(flagment==0){
-    textSize(30);
+    textSize(50);
     textAlign(CENTER);
-    fill(100);
-    text("Red",width * 0.2,height * 0.2 );
+    fill(90,20,20);
+    text("Raise the red flag !!",width * 0.5,height * 0.2 );
   }
   else if(flagment==1){
-    textSize(30);
+    textSize(50);
     textAlign(CENTER);
-    fill(100);
-    text("Blue",width * 0.2,height * 0.2 );
+    fill(10,20,80);
+    text("Raise the blue flag !!",width * 0.5,height * 0.2 );
   }
 }
