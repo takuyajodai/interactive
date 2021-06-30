@@ -3,6 +3,10 @@ import processing.video.*; //ビデオを利用する際に必要
 import jp.nyatla.nyar4psg.*; //ARToolkitを利用する際に必要
 
 int camNo = 0;
+int isBlueFlag,flagment = 0;
+int interval = 5;
+boolean  colorFlag = true;
+
 Capture cam;
 MultiMarker nya;
 
@@ -87,6 +91,12 @@ int game() {
   background(0);
   nya.drawBackground(cam);//frustumを考慮した背景描画
   text(t + "game", width * 0.5, height * 0.5);
+  if( t%(interval)==0 && colorFlag){
+    flagment = designateFlags();
+    println("flagment:"+flagment);  
+  }
+  if(t%(interval+3)==0 && colorFlag == false)colorFlag = true;
+  displayOrder();
   if(check() == 1) {
     return 2;
   }
@@ -116,4 +126,31 @@ int check() {
     return 1;
   }
   return 0;
+}
+
+int designateFlags(){
+  float val = random(2);
+  println("1,"+val);
+  isBlueFlag = int(val);
+  println("2,"+isBlueFlag);
+  colorFlag = false;
+  return isBlueFlag;
+}
+
+void displayOrder(){
+  textSize(30);
+  textAlign(CENTER);
+  fill(100);
+  if(flagment==0){
+    textSize(30);
+    textAlign(CENTER);
+    fill(100);
+    text("Red",width * 0.2,height * 0.2 );
+  }
+  else if(flagment==1){
+    textSize(30);
+    textAlign(CENTER);
+    fill(100);
+    text("Blue",width * 0.2,height * 0.2 );
+  }
 }
