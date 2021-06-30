@@ -6,6 +6,7 @@ int camNo = 0;
 int isBlueFlag,flagment = 0;
 int interval = 5;
 boolean  colorFlag = true;
+float pre_t;
 
 Capture cam;
 MultiMarker nya;
@@ -92,10 +93,11 @@ int game() {
   nya.drawBackground(cam);//frustumを考慮した背景描画
   text(t + "game", width * 0.5, height * 0.5);
   if( t%(interval)==0 && colorFlag){
+    pre_t = t;
     flagment = designateFlags();
     println("flagment:"+flagment);  
   }
-  if( t % ( interval+3 )==0 && colorFlag == false )colorFlag = true;
+  if( t == pre_t + 2 && colorFlag == false )colorFlag = true;
   displayOrder();
   if(check() == 1) {
     return 2;
