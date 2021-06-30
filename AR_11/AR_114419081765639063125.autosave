@@ -3,11 +3,6 @@ import processing.video.*; //ビデオを利用する際に必要
 import jp.nyatla.nyar4psg.*; //ARToolkitを利用する際に必要
 
 int camNo = 0;
-int isBlueFlag,flagment = 0;
-int interval = 5;
-boolean oneTimeRun, oneTimeCheck;
-float pre_t, pre_t2;
-
 Capture cam;
 MultiMarker nya;
 
@@ -75,15 +70,8 @@ void draw() {
   if(mode != nextMode){ t_start = millis(); } // 状態が遷移するので、現在の状態になった時刻を更新する
   mode = nextMode;
 }
-void gameInit() {
-  oneTimeRun = true;
-  oneTimeCheck = true;
-  t_start = 0;
-  t = 0;
-}
 
 int title() {
-  gameInit();
   textSize(30);
   textAlign(CENTER);
   text("AR旗振りゲーム", width * 0.5, height * 0.3);
@@ -96,49 +84,25 @@ int title() {
 }
 
 int game() {
-  //println("----------------");
   background(0);
   nya.drawBackground(cam);//frustumを考慮した背景描画
   text(t + "game", width * 0.5, height * 0.5);
-  
-  //interbal時間ごとに判定(最初は含まない)
-  if(t%(interval) == 0 && t != 0 && oneTimeCheck) {
-    pre_t2 = t;
-    if(check() == 0) {
-    //エンディングへ
-    return 2;
-    }
-  }
-  if( t == pre_t2 + 2 && oneTimeCheck == false) oneTimeCheck = true;
-  
-  
-  //5秒ごとに指示をランダムで指示を変える
-  if( t%(interval)==0 && oneTimeRun){
-    pre_t = t;
-    flagment = designateFlags();
-    println("flagment:"+flagment);  
-  }
-  if( t == pre_t + 2 && oneTimeRun == false) oneTimeRun = true;
- 
-  //指示を行う
-  displayOrder();
-  
-  //3Dモデルの表示
-  //マーカ0に赤を割り当て
-  if (nya.isExist(0)) {
+  if((nya.isExist(0))){
+    //0番マーカー上に座標を変換
     nya.beginTransform(0);
       shape(red_flag);
     nya.endTransform();
   }
-  //マーカ1に青を割り当て
-  if (nya.isExist(1)) {
+  if((nya.isExist(1))){
+    //1番マーカー上に座標を変換
     nya.beginTransform(1);
       shape(blue_flag);
     nya.endTransform();
   }
-   
   
-  //続ける
+  if(check() == 1) {
+    return 2;
+  }
   return 1;
 }
 
@@ -155,53 +119,14 @@ int ending() {
 }
 
 int check() {
-  oneTimeCheck = false;
-  //もし指示が赤なら
-  if(flagment == 0) {
-    // マーカー赤が存在したら
-    if (nya.isExist(0)) {
-      print("red ok ");
-      text("red ok", width * 0.6,height * 0.2);
-      return 1;
-    }
-  }
-  //もし指示が青なら
-  if(flagment == 1) {
-    // マーカー青が存在したら
-    if (nya.isExist(1)) {
-      print("blue ok ");
-      text("blue ok", width * 0.6,height * 0.2);
-      return 1;
-    }  
+  // 0番目のマーカーが存在したら
+  if (nya.isExist(0)) {
+    return 0;
   }
   
+  // 1番目のマーカーが存在したら
+  if (nya.isExist(1)) {
+    return 1;
+  }
   return 0;
-}
-
-// isBlueFlag 0: 赤 1: 青
-int designateFlags(){
-  //インターバルごとに一回のみチェック
-  oneTimeRun = false;
-  float val = random(2);
-  isBlueFlag = int(val);
-  println("isBlueFlag" + isBlueFlag);
-  return isBlueFlag;
-}
-
-void displayOrder(){
-  textSize(30);
-  textAlign(CENTER);
-  fill(100);
-  if(flagment==0){
-    textSize(30);
-    textAlign(CENTER);
-    fill(100);
-    text("Red",width * 0.2,height * 0.2 );
-  }
-  else if(flagment==1){
-    textSize(30);
-    textAlign(CENTER);
-    fill(100);
-    text("Blue",width * 0.2,height * 0.2 );
-  }
 }
