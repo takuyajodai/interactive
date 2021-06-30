@@ -34,7 +34,7 @@ void setup() {
   //println("-------------------------------");
 
   //println("接続中のカメラ；[" + camNo + "] " + cameras[camNo]);
-  cam = new Capture(this, "pipeline:autovideosrc"); //カメラに接続
+  cam = new Capture(this, cameras[camNo]); //カメラに接続 "pipeline:autovideosrc"
 
   //複数マーカ管理用オブジェクト
   nya=new MultiMarker(this, width, height, "camera_para.dat", NyAR4PsgConfig.CONFIG_PSG);
