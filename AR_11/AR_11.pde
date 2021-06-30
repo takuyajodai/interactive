@@ -6,6 +6,9 @@ int camNo = 0;
 Capture cam;
 MultiMarker nya;
 
+//ゲームモード 0:タイトル 1:ゲーム 2:終了
+int mode;
+
 //読み込み用の3Dモデル
 PShape red_flag, blue_flag;
 
@@ -34,6 +37,9 @@ void setup() {
   red_flag = loadShape("tinker_red.obj");
   blue_flag = loadShape("tinker_blue.obj");
   
+  //変数の初期化
+  mode = 0;
+  
   cam.start(); //カメラ撮影開始
 }
 
@@ -46,4 +52,44 @@ void draw() {
   nya.detect(cam);//マーカの認識
   background(0);
   nya.drawBackground(cam);//frustumを考慮した背景描画
+  
+  int nextMode = 0;
+  if(mode == 0) {
+    nextMode = title();
+  } else if(mode == 1) {
+    nextMode = game();
+  } else if(mode == 2) {
+    nextMode = ending();
+  }
+  mode = nextMode;
+}
+
+int title() {
+  textSize(30);
+  textAlign(CENTER);
+  text("AR旗振りゲーム", width * 0.5, height * 0.3);
+  text("Press 'z' key to start", width * 0.5, height * 0.7);
+  // 'z'でゲームスタート
+  if(keyPressed && key == 'z') { 
+    return 1; // start game
+  }
+  return 0;
+}
+
+int game() {
+  background(0);
+  nya.drawBackground(cam);//frustumを考慮した背景描画
+  return 2;
+}
+
+int ending() {
+  textSize(30);
+  textAlign(CENTER);
+  text("GAME OVER", width * 0.5, height * 0.5);
+  text("Press 'z' to restart.", width * 0.5, height * 0.7);
+  // 'z'でリスタート
+  if(keyPressed && key == 'z') {
+    return 0;
+  }
+  return 2;
 }
