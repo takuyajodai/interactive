@@ -6,6 +6,9 @@ int camNo = 0;
 Capture cam;
 MultiMarker nya;
 
+//読み込み用の3Dモデル
+PShape red_flag, blue_flag;
+
 void setup() {
   size(640, 480, P3D);
   colorMode(RGB, 100);
@@ -26,6 +29,11 @@ void setup() {
   //マーカ用画像の登録
   nya.addNyIdMarker(1, 100);//NyId=0のマーカーの登録（0番目のマーカーとして参照）
   nya.addNyIdMarker(2, 100);//NyId=1のマーカーの登録（1番目のマーカーとして参照）
+  
+  //3Dオブジェクトの読み込み
+  red_flag = loadShape("tinker_red.obj");
+  blue_flag = loadShape("tinker_blue.obj");
+  
   cam.start(); //カメラ撮影開始
 }
 
