@@ -18,6 +18,9 @@ int mode;
 long t_start; // 現在の状態になった時刻[ミリ秒]
 long t;      // 現在の状態になってからの経過時間[秒]
 
+//スコア
+int score;
+
 //読み込み用の3Dモデル
 PShape red_flag, blue_flag;
 
@@ -52,6 +55,7 @@ void setup() {
   
   //変数の初期化
   mode = 0;
+  score = 0;
   
   cam.start(); //カメラ撮影開始
 }
@@ -83,6 +87,8 @@ void gameInit() {
   oneTimeCheck = true;
   t_start = 0;
   t = 0;
+  score = 0;
+  interval = 5;
 }
 
 int title() {
@@ -103,7 +109,8 @@ int game() {
   //println("----------------");
   background(0);
   nya.drawBackground(cam);//frustumを考慮した背景描画
-  text(5 - (t % 5), width * 0.8, height * 0.15);
+  text(interval - (t % interval), width * 0.8, height * 0.15);
+  text("score : " + score, width * 0.8, height * 0.9);
   
   //interbal時間ごとに判定(最初は含まない)
   if(t%(interval) == 0 && t != 0 && oneTimeCheck) {
@@ -112,8 +119,10 @@ int game() {
     //エンディングへ
     return 2;
     }
+    score++;
+    if(score % 5 == 0) interval--;
   }
-  if( t == pre_t2 + 2 && oneTimeCheck == false) oneTimeCheck = true;
+  if( t == pre_t2 + 1 && oneTimeCheck == false) oneTimeCheck = true;
   
   
   //5秒ごとに指示をランダムで指示を変える
@@ -122,7 +131,7 @@ int game() {
     flagment = designateFlags();
     println("flagment:"+flagment);  
   }
-  if( t == pre_t + 2 && oneTimeRun == false) oneTimeRun = true;
+  if( t == pre_t + 1 && oneTimeRun == false) oneTimeRun = true;
  
   //指示を行う
   displayOrder();
@@ -150,8 +159,9 @@ int ending() {
   textSize(40);
   fill(100);
   textAlign(CENTER);
-  text("GAME OVER", width * 0.5, height * 0.5);
+  text("GAME OVER", width * 0.5, height * 0.4);
   textSize(30);
+  text("score : " + score, width * 0.5, height * 0.6);
   text("Press 'r' to restart.", width * 0.5, height * 0.7);
   // 'r'でリスタート
   if(keyPressed && key == 'r') {
